@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisper.cpp - Transcribe audios a texto (Windows)</title>
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+  --color-bg-6: rgba(249, 115, 22, 0.08);
+  --color-bg-7: rgba(236, 72, 153, 0.08);
+  --color-bg-8: rgba(6, 182, 212, 0.08);
+
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+
+  --font-family-base: "Arial", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-mono: "Courier New", ui-monospace, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.01em;
+
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    --color-bg-1: rgba(29, 78, 216, 0.15);
+    --color-bg-2: rgba(180, 83, 9, 0.15);
+    --color-bg-3: rgba(21, 128, 61, 0.15);
+    --color-bg-4: rgba(185, 28, 28, 0.15);
+    --color-bg-5: rgba(107, 33, 168, 0.15);
+    --color-bg-6: rgba(194, 65, 12, 0.15);
+    --color-bg-7: rgba(190, 24, 93, 0.15);
+    --color-bg-8: rgba(8, 145, 178, 0.15);
+
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-800);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-error: var(--color-red-400);
+    --color-success: var(--color-teal-300);
+    --color-warning: var(--color-orange-400);
+    --color-info: var(--color-gray-300);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+  }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-24);
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    padding: var(--space-32) var(--space-16);
+    background: var(--color-bg-5);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-32);
+}
+
+.header h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-12);
+    color: var(--color-text);
+}
+
+.header .subtitle {
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-24);
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-16);
+    text-align: left;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.feature-item {
+    display: flex;
+    align-items: start;
+    gap: var(--space-8);
+    font-size: var(--font-size-base);
+}
+
+.feature-item::before {
+    content: "✓";
+    color: var(--color-success);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+}
+
+/* Info Section */
+.info-section {
+    background: var(--color-bg-1);
+    padding: var(--space-24);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-32);
+    border: 1px solid var(--color-card-border);
+}
+
+.info-section h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-12);
+    color: var(--color-text);
+}
+
+.info-section p {
+    margin-bottom: var(--space-12);
+    color: var(--color-text-secondary);
+}
+
+.note-box {
+    background: var(--color-bg-2);
+    padding: var(--space-16);
+    border-radius: var(--radius-base);
+    margin-top: var(--space-16);
+    border-left: 4px solid var(--color-warning);
+}
+
+.note-box strong {
+    color: var(--color-text);
+    display: block;
+    margin-bottom: var(--space-8);
+}
+
+/* Steps Section */
+.steps-header {
+    text-align: center;
+    margin-bottom: var(--space-32);
+}
+
+.steps-header h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-8);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--color-secondary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-top: var(--space-16);
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    width: 0;
+    transition: width var(--duration-normal) var(--ease-standard);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-20);
+    margin-bottom: var(--space-32);
+}
+
+.step-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-20);
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--ease-standard);
+    box-shadow: var(--shadow-sm);
+}
+
+.step-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.step-card.expanded {
+    grid-column: 1 / -1;
+    border-color: var(--color-primary);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+    margin-bottom: var(--space-12);
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    flex-shrink: 0;
+}
+
+.step-info {
+    flex: 1;
+}
+
+.step-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+}
+
+.step-summary {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.expand-icon {
+    font-size: var(--font-size-xl);
+    color: var(--color-text-secondary);
+    transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+.step-card.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+.step-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--duration-normal) var(--ease-standard);
+}
+
+.step-card.expanded .step-details {
+    max-height: 1000px;
+}
+
+.step-content {
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--color-card-border-inner);
+    margin-top: var(--space-16);
+}
+
+.step-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.step-content li {
+    padding: var(--space-8) 0;
+    padding-left: var(--space-24);
+    position: relative;
+    color: var(--color-text);
+}
+
+.step-content li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+}
+
+.code-block {
+    background: var(--color-charcoal-800);
+    color: var(--color-gray-200);
+    padding: var(--space-12);
+    border-radius: var(--radius-base);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    overflow-x: auto;
+    margin: var(--space-8) 0;
+}
+
+@media (prefers-color-scheme: light) {
+    .code-block {
+        background: #2d2d2d;
+    }
+}
+
+/* Checklist Section */
+.checklist-section {
+    background: var(--color-bg-3);
+    padding: var(--space-24);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-32);
+    border: 1px solid var(--color-card-border);
+}
+
+.checklist-section h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-20);
+    color: var(--color-text);
+}
+
+.checklist {
+    display: grid;
+    gap: var(--space-12);
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    padding: var(--space-12);
+    background: var(--color-surface);
+    border-radius: var(--radius-base);
+    border: 1px solid var(--color-card-border);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.checklist-item:hover {
+    background: var(--color-secondary);
+}
+
+.checklist-item.checked {
+    opacity: 0.6;
+}
+
+.checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--color-surface);
+    transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.checklist-item.checked .checkbox {
+    background: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.checkbox::after {
+    content: "✓";
+    color: white;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.checklist-item.checked .checkbox::after {
+    opacity: 1;
+}
+
+.checklist-text {
+    flex: 1;
+    color: var(--color-text);
+}
+
+.checklist-item.checked .checklist-text {
+    text-decoration: line-through;
+}
+
+/* Tips Section */
+.tips-section {
+    background: var(--color-bg-4);
+    padding: var(--space-24);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-32);
+    border: 1px solid var(--color-card-border);
+}
+
+.tips-section h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-20);
+    color: var(--color-text);
+}
+
+.tips-grid {
+    display: grid;
+    gap: var(--space-16);
+}
+
+.tip-card {
+    background: var(--color-surface);
+    padding: var(--space-16);
+    border-radius: var(--radius-base);
+    border-left: 4px solid var(--color-warning);
+}
+
+.tip-title {
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-8);
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+}
+
+.tip-description {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: var(--space-24);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-16);
+    }
+
+    .header h1 {
+        font-size: var(--font-size-3xl);
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎙️ Transcribe audios a texto con whisper.cpp (Windows)</h1>
+            <div class="subtitle">Transcribe audios GRATIS y sin límite</div>
+            <div class="features">
+                <div class="feature-item">Compatible con cualquier idioma</div>
+                <div class="feature-item">La transcripción es aproximada, no 100% precisa</div>
+                <div class="feature-item">Ideal para reuniones, clases o entrevistas</div>
+                <div class="feature-item">¡¡Herramienta libre y sin costo!!</div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h2>¿Qué es whisper.cpp?</h2>
+            <p>Transcripción automática de audio a texto, fácil y rápida. Ideal para personas que graban reuniones y necesitan notas escritas sin esfuerzo.</p>
+            
+            <div class="note-box">
+                <strong>⚠️ Nota para usuarios nuevos</strong>
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>La transcripción puede tardar minutos u horas, según duración y equipo</li>
+                    <li>Mantén la terminal abierta hasta que finalice el proceso</li>
+                    <li>Si tienes problemas, usa la app Perplexity para subir pantallazos y recibir ayuda personalizada</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Steps Section -->
+        <div class="steps-header">
+            <h2>📋 Guía paso a paso</h2>
+            <p style="color: var(--color-text-secondary);">Haz clic en cada paso para ver los detalles</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="steps-grid" id="stepsGrid">
+            <!-- Steps will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Checklist Section -->
+        <div class="checklist-section">
+            <h2>✅ Checklist de progreso</h2>
+            <div class="checklist" id="checklist">
+                <!-- Checklist items will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h2>💡 Consejos y solución de problemas</h2>
+            <div class="tips-grid" id="tipsGrid">
+                <!-- Tips will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); color: var(--color-text); margin-bottom: var(--space-8);">Creado por: Lore Pitalúa</p>
+            <p style="font-size: var(--font-size-xs); margin-top: var(--space-8);">2025 | whisper.cpp por ggerganov</p>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const steps = [
+            {
+                number: 1,
+                title: "Instale Visual Studio Community 2022",
+                color: "#9B59B6",
+                summary: "Descargue Visual Studio con herramientas C++",
+                details: [
+                    "Descargar desde <a href='https://visualstudio.microsoft.com/es/downloads/' target='_blank'>visualstudio.microsoft.com</a>",
+                    "Durante instalación, seleccione 'Desarrollo de escritorio con C++'",
+                    "Marque 'CMake tools for Windows', 'MSVC' y 'Herramientas de C++'"
+                ]
+            },
+            {
+                number: 2,
+                title: "Instale CMake",
+                color: "#27AE60",
+                summary: "Descargue e instale CMake",
+                details: [
+                    "Descargar desde <a href='https://cmake.org/download/' target='_blank'>cmake.org/download</a>",
+                    "Marque 'Agregar CMake al PATH (todos los usuarios)' ✓"
+                ]
+            },
+            {
+                number: 3,
+                title: "Descargue y extraiga ffmpeg",
+                color: "#27AE60",
+                summary: "Obtenga ffmpeg y localice ffmpeg.exe",
+                details: [
+                    "Descargar desde <a href='https://gyan.dev/ffmpeg/builds/' target='_blank'>gyan.dev/ffmpeg/builds</a>",
+                    "Extraer y ubicar ffmpeg.exe en carpeta bin",
+                    "Opcional: copiar donde estarán los audios"
+                ]
+            },
+            {
+                number: 4,
+                title: "Descargue whisper.cpp de GitHub",
+                color: "#2C3E50",
+                summary: "Clone o descargue el proyecto",
+                details: [
+                    "Ir a <a href='https://github.com/ggerganov/whisper.cpp' target='_blank'>github.com/ggerganov/whisper.cpp</a>",
+                    "Clic en Code &gt; Download ZIP",
+                    "Extraer en carpeta como C:\\Whisper"
+                ]
+            },
+            {
+                number: 5,
+                title: "Compile whisper.cpp",
+                color: "#2C3E50",
+                summary: "Compile el proyecto con CMake",
+                details: [
+                    "Abra 'x64 Native Tools Command Prompt for VS 2022'",
+                    "Navegue y ejecute los siguientes comandos:"
+                ],
+                code: [
+                    "cd C:\\Whisper\\whisper.cpp-master",
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . --config Release"
+                ],
+                codeNote: "El ejecutable whisper-cli.exe quedará en build\\bin"
+            },
+            {
+                number: 6,
+                title: "Descargue el modelo multilingüe",
+                color: "#F39C12",
+                summary: "Obtenga ggml-small.bin",
+                details: [
+                    "Ir a <a href='https://huggingface.co/ggerganov/whisper.cpp' target='_blank'>huggingface.co/ggerganov/whisper.cpp</a>",
+                    "Descargar ggml-small.bin (o el modelo que desee)",
+                    "Copiar a carpeta models del proyecto whisper.cpp"
+                ]
+            },
+            {
+                number: 7,
+                title: "Convierta los audios a WAV",
+                color: "#27AE60",
+                summary: "Use ffmpeg para convertir",
+                details: [
+                    "Abrir terminal en carpeta bin de ffmpeg (escriba 'cmd' en la barra de direcciones)",
+                    "Ejecute el siguiente comando:"
+                ],
+                code: [
+                    ".\\ffmpeg.exe -i \"C:\\Ruta\\audio.m4a\" -ar 16000 -ac 1 \"C:\\Ruta\\audio.wav\""
+                ],
+                codeNote: "TIP: Si recibe error de 'archivo no encontrado', haga clic derecho en el archivo, vaya a Propiedades &gt; General, y COPIE Y PEGUE la 'Ubicación' y el NOMBRE exactos en el comando."
+            },
+            {
+                number: 8,
+                title: "Transcriba su audio",
+                color: "#2C3E50",
+                summary: "Ejecute whisper-cli.exe",
+                details: [
+                    "Ir a la carpeta build\\bin del proyecto whisper.cpp",
+                    "Escriba 'cmd' en la barra de direcciones y presione Enter",
+                    "Ejecute el siguiente comando:"
+                ],
+                code: [
+                    ".\\whisper-cli.exe -f \"C:\\Ruta\\audio.wav\" -m ..\\..\\models\\ggml-small.bin -l es"
+                ],
+                codeNote: "⚠️ IMPORTANTE: Deje la terminal abierta hasta que la transcripción finalice. Según el tamaño del audio, este paso puede durar varios minutos u horas."
+            },
+            {
+                number: 9,
+                title: "Encuentra tu transcripción",
+                color: "#3498DB",
+                summary: "Busque el archivo .wav.txt",
+                details: [
+                    "Ir a carpeta del audio .wav",
+                    "Buscar archivo .wav.txt",
+                    "Abrir con Notepad o editor de texto"
+                ]
+            }
+        ];
+
+        const checklistItems = [
+            "Instalar Visual Studio con C++ y CMake",
+            "Instalar CMake y agregar a PATH",
+            "Descargar y extraer ffmpeg",
+            "Descargar y extraer whisper.cpp",
+            "Compilar whisper.cpp (build)",
+            "Descargar modelo multilingüe (.bin)",
+            "Convertir audio a WAV",
+            "Ejecutar whisper-cli.exe",
+            "Revisar transcripción en .txt"
+        ];
+
+        const tips = [
+            {
+                title: "🔍 Error de rutas",
+                description: "Copie ruta exacta desde Propiedades > General del archivo. Si el nombre del archivo es largo o tiene tildes, renómbralo con letras normales y sin espacios."
+            },
+            {
+                title: "📝 Nombres de archivo",
+                description: "Evite tildes y espacios en nombres de archivo, use nombres simples y claros."
+            },
+            {
+                title: "💬 ¿Necesitas ayuda?",
+                description: "Usa Perplexity: sube pantallazos de errores para ayuda personalizada. La comunidad está lista para ayudarte."
+            }
+        ];
+
+        // State
+        let checkedItems = [];
+
+        // Render Steps
+        function renderSteps() {
+            const stepsGrid = document.getElementById('stepsGrid');
+            stepsGrid.innerHTML = steps.map(step => `
+                <div class="step-card" data-step="${step.number}" onclick="toggleStep(${step.number})">
+                    <div class="step-header">
+                        <div class="step-number" style="background-color: ${step.color};">${step.number}</div>
+                        <div class="step-info">
+                            <div class="step-title">${step.title}</div>
+                            <div class="step-summary">${step.summary}</div>
+                        </div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="step-details">
+                        <div class="step-content">
+                            <ul>
+                                ${step.details.map(detail => `<li>${detail}</li>`).join('')}
+                            </ul>
+                            ${step.code ? `
+                                <div class="code-block">${step.code.join('<br>')}</div>
+                            ` : ''}
+                            ${step.codeNote ? `
+                                <p style="margin-top: 12px; color: var(--color-text-secondary); font-size: var(--font-size-sm);">${step.codeNote}</p>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle Step
+        function toggleStep(stepNumber) {
+            const card = document.querySelector(`[data-step="${stepNumber}"]`);
+            const wasExpanded = card.classList.contains('expanded');
+            
+            // Close all steps
+            document.querySelectorAll('.step-card').forEach(c => c.classList.remove('expanded'));
+            
+            // Open clicked step if it wasn't expanded
+            if (!wasExpanded) {
+                card.classList.add('expanded');
+            }
+        }
+
+        // Render Checklist
+        function renderChecklist() {
+            const checklist = document.getElementById('checklist');
+            checklist.innerHTML = checklistItems.map((item, index) => `
+                <div class="checklist-item ${checkedItems.includes(index) ? 'checked' : ''}" onclick="toggleChecklistItem(${index})">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">${item}</div>
+                </div>
+            `).join('');
+            updateProgress();
+        }
+
+        // Toggle Checklist Item
+        function toggleChecklistItem(index) {
+            if (checkedItems.includes(index)) {
+                checkedItems = checkedItems.filter(i => i !== index);
+            } else {
+                checkedItems.push(index);
+            }
+            renderChecklist();
+        }
+
+        // Update Progress Bar
+        function updateProgress() {
+            const progress = (checkedItems.length / checklistItems.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Render Tips
+        function renderTips() {
+            const tipsGrid = document.getElementById('tipsGrid');
+            tipsGrid.innerHTML = tips.map(tip => `
+                <div class="tip-card">
+                    <div class="tip-title">${tip.title}</div>
+                    <div class="tip-description">${tip.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        renderSteps();
+        renderChecklist();
+        renderTips();
+    </script>
+</body>
+</html>
